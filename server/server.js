@@ -2,17 +2,20 @@ const PORT = 5001;
 
 const JOIN_ROOM_EVENT = "joinRoom";
 const SCREEN_SHARE_EVENT = "screenShare";
+const SHARE_STOP_EVENT = "stopShare"
 const MOUSE_MOVEMENT_EVENT = "mouseMovement";
 const MOUSE_CLICK_EVENT = "mouseClick";
 
 const app = require('express')();
 const server = require('http').createServer(app);
+const {persistImage} = require("./persistImage");
 
 const io = require('socket.io')(server, {
     cors: {
         origin: "*"
       }
 });
+let roomImageSequence = new Map();
 
 io.on("connection", (socket) => {
     console.log("socket: ", socket);
@@ -22,6 +25,7 @@ io.on("connection", (socket) => {
         if (isBlank(roomId)) {
             return;
         }
+        roomImageSequence.set(roomId, 0);
         socket.join(JOIN_ROOM_EVENT);
         console.log("socket %s joined room %s", socket.id, roomId);
     });
@@ -31,8 +35,22 @@ io.on("connection", (socket) => {
         if (isBlank(roomId)) {
             return;
         }
+        if(roomImageSequence.has(roomId)){
+            let sequence = roomImageSequence.get(roomId);
+            persistImage(payload.image, roomId, sequence);
+            sequence++;
+            roomImageSequence.set(roomId, sequence);
+        }
         socket.to(roomId).emit(SCREEN_SHARE_EVENT, payload);
     });
+
+    socket.on(SHARE_STOP_EVENT, (roomId, payload) => {
+        console.log("Received %s event, roomId: %s, payload: %s", MOUSE_MOVEMENT_EVENT, roomId, payload);
+        if (isBlank(roomId)) {
+            return;
+        }
+        roomImageSequence.delete(roomId);
+    })
 
     socket.on(MOUSE_MOVEMENT_EVENT, (roomId, payload) => {
         console.log("Received %s event, roomId: %s, payload: %s", MOUSE_MOVEMENT_EVENT, roomId, payload);
@@ -52,7 +70,7 @@ io.on("connection", (socket) => {
 
     socket.on("disconnecting", () => {
         console.log("Disconnecting... %s", socket.rooms);
-      });
+    });
 });
 
 
