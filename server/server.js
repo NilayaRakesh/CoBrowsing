@@ -25,7 +25,6 @@ io.on("connection", (socket) => {
         if (isBlank(roomId)) {
             return;
         }
-        roomImageSequence.set(roomId, 0);
         socket.join(JOIN_ROOM_EVENT);
         console.log("socket %s joined room %s", socket.id, roomId);
     });
@@ -35,12 +34,16 @@ io.on("connection", (socket) => {
         if (isBlank(roomId)) {
             return;
         }
+        let sequence = 0;
         if(roomImageSequence.has(roomId)){
-            let sequence = roomImageSequence.get(roomId);
-            persistImage(payload.image, roomId, sequence);
-            sequence++;
-            roomImageSequence.set(roomId, sequence);
+            sequence = roomImageSequence.get(roomId);
         }
+        else{
+            roomImageSequence.set(roomId, 0);
+        }
+        persistImage(payload.image, roomId, sequence);
+        sequence++;
+        roomImageSequence.set(roomId, sequence);
         socket.to(roomId).emit(SCREEN_SHARE_EVENT, payload);
     });
 
