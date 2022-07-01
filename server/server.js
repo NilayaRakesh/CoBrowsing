@@ -9,6 +9,7 @@ const MOUSE_CLICK_EVENT = "mouseClick";
 const app = require('express')();
 const server = require('http').createServer(app);
 const {persistImage} = require("./persistImage");
+const {createVideo} = require("./createVideo")
 
 const io = require('socket.io')(server, {
     cors: {
@@ -52,6 +53,7 @@ io.on("connection", (socket) => {
         if (isBlank(roomId)) {
             return;
         }
+        createVideo(roomId);
         roomImageSequence.delete(roomId);
     })
 
