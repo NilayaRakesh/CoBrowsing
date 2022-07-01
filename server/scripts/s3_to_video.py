@@ -15,11 +15,14 @@ import numpy as np
 import sys
 
 print("started video creation")
+
+AWS_ACCESS_KEY = sys.argv[2]
+AWS_SECRET_ACCESS_KEY = sys.argv[3]
 s3 = boto3.resource(
     service_name='s3',
     region_name='us-east-1',
-    aws_access_key_id='AKIAVTPSI5XPP4D2WSBI',
-    aws_secret_access_key='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'
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY
 )
 
 screenShare_bucket=s3.Bucket('secure-screen')
