@@ -6,11 +6,30 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "blob-to-base64": "^1.0.2",
+    "dom-to-image": "^2.6.0",
+    "file-saver": "^2.0.5",
+    "filereader": "^0.10.3",
+    "lodash": "^4.17.21",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "rn-nodeify": "^10.3.0",
+    "robotjs": "^0.6.0",
+    "screenshot-desktop": "^1.12.7",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5",
+    "uuid": "^8.3.2",
     "web-vitals": "^2.1.4"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false,
+    "net": false,
+    "tls": false
   },
   "scripts": {
     "start": "react-scripts start",
@@ -35,5 +54,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "electron": "^19.0.7"
+  },
+  "postinstall": "node_modules/.bin/rn-nodeify --install crypto,fs,https --hack"
 }

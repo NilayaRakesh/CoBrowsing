@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
+import {ipcStart,ipcStop} from "./serverManager";
+
 
 const Button = styled.button`
     height: 40px;
@@ -41,9 +43,30 @@ const FormSection = styled.div`
 `
 
 function accountPage() {
+
   const onSubmit = () => {
     alert("Your account has been terminated");
   }
+  window.onload = function() {
+    console.log("window loaded");
+    // ipcRenderer.on("uuid", (event, data) => {
+    //     document.getElementById("code").innerHTML = data;
+    // })
+}
+
+function startShare(){
+   // ipcRenderer.send("start-share", {});
+    ipcStart();
+    // document.getElementById("start").style.display = "none";
+    // document.getElementById("stop").style.display = "block";
+}
+
+function stopShare(){
+    ipcStop();
+   // ipcRenderer.send("stop-share", {});
+    // document.getElementById("stop").style.display = "none";
+    // document.getElementById("start").style.display = "block";
+}
   
   return (
     <Wrapper>
@@ -69,6 +92,12 @@ function accountPage() {
                 </FormSection>
                 <FormSection>
                     <Button onClick={onSubmit}>Submit</Button>
+                </FormSection>
+                <FormSection>
+                    <Button onClick={startShare}> Share Screen</Button>
+                </FormSection>
+                <FormSection>
+                    <Button onClick={stopShare}> Stop Screen</Button>
                 </FormSection>
             </Form>
         </BodyWrapper>
