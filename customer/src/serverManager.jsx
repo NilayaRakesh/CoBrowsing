@@ -6,24 +6,25 @@ var interval;
 const socket = io("http://localhost:5001");
 export const ipcStart = () => {
     console.log(" Screen Share started ");
-
+    socket.emit("joinRoom", "12345");
     interval = setInterval(function() {
         domtoimage.toBlob(document.getElementById('my-node'))
         .then(function (blob) {
            // window.saveAs(blob, 'my-node.png');
-            console.log("blob blob->",blob);
+            // console.log("blob blob->",blob);
             let base64Stream;
             var reader = new FileReader();
             reader.readAsDataURL(blob); 
             reader.onloadend = function() {
             var base64data = reader.result;  
             base64Stream = base64data;              
-            console.log(base64data);
+            // console.log(base64data);
+            console.log("emitting blob");
             const data = {
                 "roomId": "123",
                 "base64": base64Stream
             }
-           socket.emit("shareScreen","12345",base64data);
+           socket.emit("screenShare","12345",base64data);
             }
            // console.log("base 64 ->",base64Stream);
            
